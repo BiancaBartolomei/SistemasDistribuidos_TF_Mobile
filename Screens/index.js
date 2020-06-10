@@ -1,5 +1,6 @@
 import Login from './Login';
 import CreateUser from './CreateUser';
+import Main from './Main';
 
 import { createAppContainer } from 'react-navigation';
 
@@ -9,6 +10,7 @@ const Routes = createAppContainer(
   createStackNavigator({
     Login: Login,
     CreateUser: CreateUser,
+    Main: Main,
   })
 );
 
