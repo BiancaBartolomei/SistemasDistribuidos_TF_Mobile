@@ -17,9 +17,18 @@ const Routes = createAppContainer(
   createStackNavigator({
     Login: Login,
     CreateUser: CreateUser,
+<<<<<<< HEAD
     CreateUser2: CreateUser2,
     Main: Main,
     SearchPlace: SearchPlace,
+=======
+    Main: {
+      screen: Main,
+      navigationOptions: {
+        headerShown: false,
+      }
+    },
+>>>>>>> [ADD] Main Screen
     SearchPlace: {
       screen: SearchPlace,
       navigationOptions: {
