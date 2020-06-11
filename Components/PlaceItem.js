@@ -28,7 +28,7 @@ class PlaceItem extends Component {
               />
               <View style={styles.itemInfo}>
                 <Text style={styles.title}>{this.state.placeName}</Text>
-                <Text style={styles.title}>{this.state.placeCNPJ}</Text>
+                <Text style={styles.subtitle}>{this.state.placeCNPJ}</Text>
               </View>
         
               </View>
@@ -45,19 +45,26 @@ class PlaceItem extends Component {
     item: {
       backgroundColor: '#ffffff',
       padding: 20,
-      marginVertical: 8,
-      marginHorizontal: 16,
       flex:1,
       flexDirection: "row",
       alignItems: "center",
+      borderColor: '#e0e0e0',
+      borderWidth: 1,
+      borderTopWidth: 0,
     },
     itemInfo: {
       flex: 1,
       flexDirection: "column",
-      marginLeft: 50,
+      marginLeft: 30,
     },
     title: {
-      fontSize: 32,
+      fontSize: 20,
+      color: "#707070",
+      fontWeight: "bold",
+    },
+    subtitle: {
+      color: "#707070",
+      fontSize: 15,
     },
     logo: {
       width: 50,

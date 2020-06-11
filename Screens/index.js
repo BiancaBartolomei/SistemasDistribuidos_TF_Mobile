@@ -5,7 +5,7 @@ import Main from './Main';
 import CreateUser2 from './CreateUser2';
 =======
 import SearchPlace from './SearchPlace';
-import Place from './Place'
+import Place from './Place';
 
 >>>>>>> [ADD] Search Places Screens
 import { createAppContainer } from 'react-navigation';
@@ -20,6 +20,12 @@ const Routes = createAppContainer(
     CreateUser2: CreateUser2,
     Main: Main,
     SearchPlace: SearchPlace,
+    SearchPlace: {
+      screen: SearchPlace,
+      navigationOptions: {
+        headerShown: false,
+      }
+    },
     Place: {
         screen: Place,
         navigationOptions: {

@@ -3,7 +3,7 @@ import PlaceItem from '../Components/PlaceItem'
 
 import React, { Component } from "react";
 import { withNavigation } from 'react-navigation';
-import { Button, StyleSheet, View, FlatList, TextInput } from 'react-native';
+import { Button, StyleSheet, View, FlatList, TextInput, TouchableOpacity, Image, ImageBackground } from 'react-native';
 
 
 
@@ -16,20 +16,22 @@ class SearchPlace extends Component {
 
     this.state = {
       data: [],
-      serach: '',
+      search: this.props.navigation.getParam('search'),
       isLoading: true
     };
   }
 
+
   makeRemoteRequest(){
-    const url = `http://192.168.0.108:3300/place/${this.state.serach}`;
+    this.value = this.state.search.replace(" ", "_")
+    const url = `http://192.168.0.109:3300/place/${this.value}`;
     fetch(url, {
       method: 'GET',
     })
       .then(res => res.json())
       .then(res => {
         console.log(res)
-        console.log(this.state.serach)
+        console.log(this.state.search)
         this.setState({data: res})
       })
       .catch(error => {
@@ -37,18 +39,28 @@ class SearchPlace extends Component {
       });
   };
 
+  componentDidMount(){
+    this.makeRemoteRequest()
+  }
+
   render(){
     const { navigation } = this.props;
     return(
       <View style={styles.container}>
-
-        <View style={styles.searchBox}>
-          <Button title="Pesquisar" style={styles.searchButton}
-            onPress = {() => this.makeRemoteRequest()}
-          />
-          <TextInput style={styles.searchInput}
-                    onChangeText={(text) => this.setState({serach: text.replace(" ", "_")})}/>
-        </View>
+        <ImageBackground source={require('../images/Estabelecimento.jpg')} style={styles.image}>
+          <View style={styles.searchHeader}> 
+            <View style={styles.searchBox}>
+            <TouchableOpacity onPress={() => {navigation.goBack()}}>
+                                    <Image source={require('../images/arrow.png')} style={styles.backIcon}/>
+                                </TouchableOpacity>
+              <TextInput style={styles.searchInput}
+                        value={this.state.search}
+                        onChangeText={(text) => {this.setState({search: text}); this.makeRemoteRequest()}}
+                        onSubmitEditing={(event) => this.makeRemoteRequest()}          
+              />
+            </View>
+          </View>
+        </ImageBackground>
 
         <View style={styles.listBox}>
         <FlatList
@@ -78,32 +90,48 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     color: '#ffff',
-    padding: "5%",
   },
   searchBox: {
-    alignItems: "flex-start",
-    justifyContent:"flex-start",
+    alignItems: "center",
+    justifyContent:"center",
     flex: 1,
     flexDirection: "row",
+    flexGrow:1,
+    marginHorizontal: "5%",
+    marginVertical: "1%"
+  },
+  searchHeader: {
+    flex: 1,
   },
   listBox: {
-
+    flexGrow: 10,
     justifyContent:"flex-start",
-    paddingBottom: 40,
+    paddingVertical: 40,
+    paddingHorizontal: 40,
     flex: 1,
   },
   searchButton: {
     marginLeft: "5%",
     justifyContent: "flex-start", 
-    alignItems: "flex-start"
+    alignItems: "flex-start",
   },
   searchInput: {
-    marginBottom: 20,
-    width: 240,
+    width: "100%",
     height: 40,
     paddingHorizontal: 10,
     borderRadius: 5,
-    backgroundColor: '#ffffff',
+    borderBottomColor: '#e0e0e0',
+    borderBottomWidth: 1,
+    color: "white"
+  },
+  backIcon: {
+    width: 30,
+    height: 30,
+  },
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center"
   },
 });
 
