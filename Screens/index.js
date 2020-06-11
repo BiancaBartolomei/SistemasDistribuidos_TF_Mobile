@@ -6,6 +6,7 @@ import CreateUser2 from './CreateUser2';
 =======
 import SearchPlace from './SearchPlace';
 import Place from './Place';
+import RequestPlace from './RequestPlace';
 
 >>>>>>> [ADD] Search Places Screens
 import { createAppContainer } from 'react-navigation';
@@ -40,6 +41,12 @@ const Routes = createAppContainer(
         navigationOptions: {
           headerShown: false,
         }
+    },
+    RequestPlace: {
+      screen: RequestPlace,
+      navigationOptions: {
+        headerShown: false,
+      }
     }
   })
 );
