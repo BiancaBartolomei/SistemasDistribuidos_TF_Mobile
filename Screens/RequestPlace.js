@@ -16,11 +16,13 @@ class RequestPlace extends Component {
       area: '',
       capacidade: '',
       userId: '',
+      endereco: '',
       isLoading: true
     };
   }
 
   sendRequestPlace(){
+    console.log(this.state)
     fetch('http://192.168.0.109:3300/createRequest',{
         method: 'POST',
         headers: {
@@ -33,7 +35,7 @@ class RequestPlace extends Component {
             area: this.state.area,
             maxQnt: this.state.capacidade,
             userId: this.state.userId,
-            placeId: 3,
+            endereco: this.state.endereco,
         })
       })
         .then((response) => response.json())
@@ -48,7 +50,7 @@ class RequestPlace extends Component {
   }
 
   render() {
-    const { name, cnpj, area, capacidade, isLoading } = this.state;
+    const { name, cnpj, area, capacidade, endereco, isLoading } = this.state;
     
     return (
       <View>
@@ -60,6 +62,14 @@ class RequestPlace extends Component {
                 <TextInput style={styles.inputStyle} placeholder="Nome fantasia do estabelecimento" name="name"
                 onChangeText={nome => this.setState({nome})}
                 defaultValue={name} >
+                </TextInput>
+            </View>
+
+            <View style={styles.inputBox}>
+                <Text style={styles.formLabel}>Endereço</Text>
+                <TextInput style={styles.inputStyle} placeholder="Endereço do estabelecimento" name="endereco"
+                onChangeText={endereco => this.setState({endereco})}
+                defaultValue={endereco} >
                 </TextInput>
             </View>
 
