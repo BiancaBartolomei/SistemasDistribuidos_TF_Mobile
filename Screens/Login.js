@@ -24,7 +24,7 @@ class Login extends Component {
     if(email === '' || senha === ''){
         this.setState({erro: "Preencha o campo de email e senha corretamente."})
     } else {
-      fetch('http://192.168.15.14:3300/login',{
+      fetch('http://192.168.0.108:3300/login',{
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -41,7 +41,8 @@ class Login extends Component {
             this.setState({erro: "Usuário e/ou senha incorreta."})
           } else {
             this.setState({erro: ""})
-            this.props.navigation.navigate('Main', responseJson[0]);
+            this.props.navigation.navigate('Main', {user: responseJson[0]});
+            
   
           }
         })
@@ -68,7 +69,7 @@ class Login extends Component {
               defaultValue={senha}></TextInput>
             <Text style={styles.errorText}>{this.state.erro}</Text>
             <TouchableOpacity
-                  onPress={()=>this.props.navigation.navigate('CreateUser')}
+                  onPress={()=>loginAuth(email, senha)}
                   style={styles.buttonEnter}><Text style={styles.buttonEnterText}>Entrar</Text></TouchableOpacity>
           </View>
         <Text style={styles.cadastroText}>Não possui conta?</Text>

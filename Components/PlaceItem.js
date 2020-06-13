@@ -11,7 +11,8 @@ class PlaceItem extends Component {
 
         this.state = {
             placeName: this.props.place.name,
-            placeCNPJ: this.props.place.cnpj,
+            palceAddress: this.props.place.endereco,
+            user: this.props.navigation.getParam("user"),
         }
 
     }
@@ -19,7 +20,7 @@ class PlaceItem extends Component {
     render(){
         const { navigation } = this.props;
         return (
-            <TouchableOpacity onPress={() => {navigation.navigate('Place', {place: this.props.place})}}>
+            <TouchableOpacity onPress={() => {navigation.navigate('Place', {place: this.props.place, user: this.state.user})}}>
               <View style={styles.item} >
         
               <Image
@@ -28,7 +29,7 @@ class PlaceItem extends Component {
               />
               <View style={styles.itemInfo}>
                 <Text style={styles.title}>{this.state.placeName}</Text>
-                <Text style={styles.subtitle}>{this.state.placeCNPJ}</Text>
+                <Text style={styles.subtitle}>{this.state.palceAddress}</Text>
               </View>
         
               </View>

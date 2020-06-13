@@ -4,21 +4,45 @@ import 'react-native-gesture-handler';
 import PlaceItem from '../Components/PlaceItem'
 
 import React, {Component} from 'react';
-import { Button, StyleSheet, View, Text, TouchableOpacity, Image, TextInput, FlatList, ImageBackground } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Image, TextInput, FlatList, ImageBackground } from 'react-native';
 
 class Main extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      name: "Luís Otávio",
-      id: "001",
+      user: this.props.navigation.getParam("user"),
       search: '',
-      data: [{"area": "23", "cnpj": "34245", "max_qnt": 12, "name": "Place2", "place_id": 2}, {"area": "43", "cnpj": "34545", "max_qnt": 23, "name": "Place3", "place_id": 3}]
+      data: '',
     };
   }
 
-  
+
+  getFavourites(){
+    const url = `http://192.168.0.108:3300/favourites/${this.state.user.user_id}`;
+    fetch(url, {
+      method: 'GET',
+    })
+      .then(res => res.json())
+      .then(res => {
+        this.setState({data: res})
+      })
+      .catch(error => {
+        console.log(error)
+      });
+  }
+
+  componentDidMount(){
+    const { navigation } = this.props;
+    this.getFavourites()
+    this.navFocusListener = navigation.addListener('didFocus', () => {
+      this.getFavourites()
+    });
+  }
+
+  componentWillUnmount() {
+    this.navFocusListener.remove();
+}
 
   render() {
     const { navigation } = this.props;
@@ -27,7 +51,7 @@ class Main extends Component {
           <ImageBackground source={require('../images/Estabelecimento.jpg')} style={styles.backgroundImage}>
             <View style={styles.mainHeaderBox}>
                 <View>
-                    <Text style={styles.nameUserText}>Olá, {this.state.name}.</Text>
+                    <Text style={styles.nameUserText}>Olá, {this.state.user.name}.</Text>
                 </View>
 
                 <View style={styles.menuButtonBox}>
@@ -39,7 +63,7 @@ class Main extends Component {
 
                 <View style={styles.menuButtonBox}>
                   <Image source={require('../images/more.png')} style={styles.iconImage}/>
-                  <TouchableOpacity onPress={() => {navigation.navigate('RequestPlace', {id: this.state.id})}}>
+                  <TouchableOpacity onPress={() => {navigation.navigate('RequestPlace', {user: this.state.user})}}>
                     <Text style={styles.menuButtonText}>CADASTRAR ESTABELECIMENTO</Text>
                   </TouchableOpacity>
                 </View>
@@ -56,19 +80,16 @@ class Main extends Component {
           <View style={styles.searchBox}>
             <TextInput style={styles.searchInput} 
               onChangeText={(text) => this.setState({search: text})}
-              onSubmitEditing={(event) => navigation.navigate('SearchPlace', {search: event.nativeEvent.text})}
+              onSubmitEditing={(event) => navigation.navigate('SearchPlace', {search: event.nativeEvent.text, user: this.state.user})}
               />
-            <View>
-              <TouchableOpacity onPress={() => {navigation.navigate('SearchPlace', {search: this.state.search})}}>
-                  <Image source={require('../images/search.png')} style={styles.iconImage}/>
-              </TouchableOpacity>
-            </View>
           </View>
 
           <View style={styles.favoritesBox}>
+            <Text style={styles.placeFavouriteHeader}>Estabelecimentos Favoritos</Text>
             <FlatList
+              style={styles.flatList}
               data={this.state.data}
-              renderItem={({ item }) => <PlaceItem place={item} />}
+              renderItem={({ item }) => <PlaceItem place={item} user={this.state.user}/>}
               keyExtractor={item => item.place_id.toString()}
             />
           </View>
@@ -126,19 +147,37 @@ const styles = StyleSheet.create({
   },
   favoritesBox: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
     flexGrow: 3,
     paddingTop: 10,
+    width: "80%",
   },
   searchInput: {
     marginBottom: 20,
     height: 5,
     paddingHorizontal: 10,
     backgroundColor: "#ffffff",
-    width: "70%",
+    width: "80%",
     height: 50,
     borderRadius: 100,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.20,
+    shadowRadius: 1.41,
+
+    elevation: 2,
+  },
+  flatList: {
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.20,
+    shadowRadius: 1.41,
+
+    elevation: 2,
   },
   searchBox: {
     flexGrow: 0,
@@ -156,6 +195,27 @@ const styles = StyleSheet.create({
   iconImage: {
     width: 15,
     height: 15,
+  },
+  placeFavouriteHeader: {
+    backgroundColor: '#ffffff',
+    alignItems: "center",
+    justifyContent: "center",
+    fontWeight: "bold",
+    borderColor: '#e0e0e0',
+    borderBottomWidth: 1,
+    color: "#3498dbff",
+    padding: 10,
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.20,
+    shadowRadius: 1.41,
+
+    elevation: 2,
+  },
+  favoritesText: {
+
   }
 });
 

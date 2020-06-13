@@ -15,6 +15,7 @@ class SearchPlace extends Component {
 
 
     this.state = {
+      user: this.props.navigation.getParam("user"),
       data: [],
       search: this.props.navigation.getParam('search'),
       isLoading: true
@@ -24,7 +25,7 @@ class SearchPlace extends Component {
 
   makeRemoteRequest(){
     this.value = this.state.search.replace(" ", "_")
-    const url = `http://192.168.0.109:3300/place/${this.value}`;
+    const url = `http://192.168.0.108:3300/place/${this.value}`;
     fetch(url, {
       method: 'GET',
     })
@@ -65,7 +66,7 @@ class SearchPlace extends Component {
         <View style={styles.listBox}>
         <FlatList
         data={this.state.data}
-        renderItem={({ item }) => <PlaceItem place={item} />}
+        renderItem={({ item }) => <PlaceItem place={item} user={this.state.user}/>}
         keyExtractor={item => item.place_id.toString()}
       />
         </View>
