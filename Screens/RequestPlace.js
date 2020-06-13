@@ -4,26 +4,33 @@ import 'react-native-gesture-handler';
 
 import React, {Component} from 'react';
 import { withNavigation } from 'react-navigation';
-import { Button, StyleSheet, View, Text, TouchableOpacity, Image, TextInput, FormData } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { Button, StyleSheet, View, Text, TouchableOpacity, Image, TextInput } from 'react-native';
 
 class RequestPlace extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      user: this.props.navigation.getParam("user"),
       nome: '',
       cnpj: '',
       area: '',
       capacidade: '',
-      userId: '',
       endereco: '',
-      isLoading: true
+      isLoading: true,
+      error: '',
     };
   }
 
-  sendRequestPlace(){
+  sendRequestPlace(name, cnpj, area, capacidade, endereco){
+    if(name === '' || cnpj === '' || area === '' || capacidade === '' || endereco === '' ){
+      this.setState({error: "Preencha todos os campos."})
+      return
+    }
+    this.setState({error: ''})
     console.log(this.state)
-    fetch('http://192.168.0.109:3300/createRequest',{
+    fetch('http://192.168.0.108:3300/createRequest',{
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -34,18 +41,16 @@ class RequestPlace extends Component {
             cnpj: this.state.cnpj,
             area: this.state.area,
             maxQnt: this.state.capacidade,
-            userId: this.state.userId,
+            userId: this.state.user.user_id,
             endereco: this.state.endereco,
         })
       })
         .then((response) => response.json())
         .then((responseJson) => {
-           console.log(responseJson);
-           //FIX
-           this.props.navigation.navigate('Main')
+           console.log("Recebeu: " + responseJson);
         })
         .catch((error) => {
-           console.error(error);
+          //  console.error(error);
         });
   }
 
@@ -53,7 +58,11 @@ class RequestPlace extends Component {
     const { name, cnpj, area, capacidade, endereco, isLoading } = this.state;
     
     return (
-      <View>
+      <KeyboardAwareScrollView 
+        style={styles.container}
+        scrollEnabled={false}
+        resetScrollToCoords={{ x: 0, y: 0 }}>
+
           <View style={styles.formTextBox}>
             <Text style={styles.formText}>Cadastrar estabelecimento</Text>
 
@@ -85,7 +94,8 @@ class RequestPlace extends Component {
                 <Text style={styles.formLabel}>Área</Text>
                 <TextInput style={styles.inputStyle} placeholder="Área do estabelecimento em m²" name="area"
                 onChangeText={area => this.setState({area})}
-                defaultValue={area} >
+                defaultValue={area}
+                keyboardType={"numeric"} >
                 </TextInput>
             </View>
 
@@ -93,27 +103,38 @@ class RequestPlace extends Component {
                 <Text style={styles.formLabel}>Capacidade</Text>
                 <TextInput style={styles.inputStyle} placeholder="Quantidade máxima de pessoas" name="capacidade"
                 onChangeText={capacidade => this.setState({capacidade})}
-                defaultValue={capacidade} >
+                defaultValue={capacidade} 
+                keyboardType={"numeric"}>
                 </TextInput>
             </View>
 
+            <View style={styles.textInfoBox}>
+              <Text style={styles.textInfo}>{this.state.error}</Text>
+            </View>
 
-            <Button title = "ENVIAR REQUISIÇÃO"
-                onPress={()=>this.sendRequestPlace()}
-                style={styles.buttonEnter}/>
+            <TouchableOpacity
+                  onPress={()=>this.sendRequestPlace(name, cnpj, area, capacidade, endereco)}
+                  style={styles.buttonEnter}><Text style={styles.buttonEnterText}>ENVIAR REQUISIÇÃO</Text></TouchableOpacity>
+
             
             <View style={styles.textInfoBox}>
                 <Text style={styles.textInfo}>*SUJEITO A APROVAÇÃO</Text>
             </View>
         </View>  
-      </View> 
+      </KeyboardAwareScrollView> 
       
   );
   }
 };
 
 
-export default withNavigation(RequestPlace)
+
+RequestPlace.navigationOptions = {
+  title: 'RequestPlace',
+  headerShown: false,
+}
+
+export default RequestPlace
 
 
 const styles = StyleSheet.create({
@@ -175,11 +196,23 @@ const styles = StyleSheet.create({
       fontSize: 12,
   },
   textInfoBox: {
-      flex: 1,
-      justifyContent: "flex-start",
-      alignItems: "flex-start",
-      paddingTop: 20,
-  }
+      // flex: 1,
+      // justifyContent: "flex-start",
+      // alignItems: "flex-start",
+      paddingVertical: 10,
+  },
+  buttonEnter: {
+    backgroundColor: 'blue',
+    paddingVertical: 12,
+    width: 300,
+    borderRadius:10,
+    alignItems: "center"
+
+  },
+  buttonEnterText: {
+    color: "white",
+    fontSize: 18
+  },
 }); 
 
 
