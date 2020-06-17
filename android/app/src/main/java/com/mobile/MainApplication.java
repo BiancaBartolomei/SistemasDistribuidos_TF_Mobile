@@ -10,6 +10,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import android.content.Intent;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -45,6 +46,8 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
+    Intent service = new Intent(getApplicationContext(), LocationService.class); 
+    getApplicationContext().startService(service);
   }
 
   /**

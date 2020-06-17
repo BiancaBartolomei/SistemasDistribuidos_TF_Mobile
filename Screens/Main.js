@@ -4,7 +4,11 @@ import 'react-native-gesture-handler';
 import PlaceItem from '../Components/PlaceItem'
 
 import React, {Component} from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Image, TextInput, FlatList, ImageBackground } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Image, TextInput, FlatList, ImageBackground, AppRegistry } from 'react-native';
+import Geolocation from '@react-native-community/geolocation';  
+
+
+AppRegistry.registerHeadlessTask('LogLocation', () => require('./LogLocation'));
 
 class Main extends Component {
   constructor(props) {
@@ -17,9 +21,8 @@ class Main extends Component {
     };
   }
 
-
   getFavourites(){
-    const url = `http://192.168.0.108:3300/favourites/${this.state.user.user_id}`;
+    const url = `http://192.168.0.110:3300/favourites/${this.state.user.user_id}`;
     fetch(url, {
       method: 'GET',
     })
@@ -32,7 +35,9 @@ class Main extends Component {
       });
   }
 
+
   componentDidMount(){
+    // Geolocation.getCurrentPosition(info => console.log(info));
     const { navigation } = this.props;
     this.getFavourites()
     this.navFocusListener = navigation.addListener('didFocus', () => {
