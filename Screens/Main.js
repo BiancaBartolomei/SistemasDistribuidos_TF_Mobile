@@ -2,15 +2,48 @@
 // https://aboutreact.com/react-native-navigation-drawer //
 import 'react-native-gesture-handler';
 import PlaceItem from '../Components/PlaceItem'
-
 import React, {Component} from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Image, TextInput, FlatList, ImageBackground, AppRegistry } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Image, TextInput, FlatList, ImageBackground, AppRegistry,  Alert, AsyncStorage, Button } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';  
 
 
-AppRegistry.registerHeadlessTask('LogLocation', () => require('./LogLocation'));
 
-class Main extends Component {
+
+
+const LogLocation = async (id) => {
+
+  Geolocation.getCurrentPosition(info => {
+    fetch('http://192.168.15.14:3300/sendLocation',{
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        user_id: id,
+        lat: info["coords"]["latitude"],
+        long: info["coords"]["longitude"]
+      })
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log("Foi: "+info);
+      })
+      .catch((error) => {
+         console.error(error);
+      });
+
+  });
+
+  setInterval(()=>{LogLocation(id)}, 60000)
+
+};
+
+
+
+AppRegistry.registerHeadlessTask('LogLocation', () => LogLocation());
+
+export default class Main extends Component {
   constructor(props) {
     super(props);
 
@@ -37,7 +70,9 @@ class Main extends Component {
 
 
   componentDidMount(){
-    // Geolocation.getCurrentPosition(info => console.log(info));
+    var id = this.state.user.user_id
+    this.timer = LogLocation(id);
+
     const { navigation } = this.props;
     this.getFavourites()
     this.navFocusListener = navigation.addListener('didFocus', () => {
@@ -225,4 +260,3 @@ const styles = StyleSheet.create({
 });
 
 
-export default Main
