@@ -18,8 +18,13 @@ class PlaceInfo extends Component {
 
     }
 
+    UNSAFE_componentWillUpdate(nextProps, nextState) {
+      nextState.data = nextProps.data;
+  }
+
     render(){
         const { navigation } = this.props;
+        const { title, data } = this.state
         return (
             <View style={styles.item} >
                         
@@ -28,8 +33,8 @@ class PlaceInfo extends Component {
                 source={this.state.icon}
                 />
                 <View style={styles.itemInfo}>
-                    <Text style={styles.textTitle}>{this.state.title}</Text>
-                    <Text style={styles.textData}>{this.state.data}</Text>
+                    <Text style={styles.textTitle}>{title}</Text>
+                    <Text style={styles.textData}>{data}</Text>
                 </View>
 
             </View>
@@ -60,7 +65,8 @@ class PlaceInfo extends Component {
       fontWeight: "bold",
     },
     textData: {
-        fontSize: 10,
+        fontSize: 13,
+        marginTop: 10,
     },
     logo: {
       width: 50,
