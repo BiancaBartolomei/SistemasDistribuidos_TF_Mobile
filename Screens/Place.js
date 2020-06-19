@@ -18,6 +18,8 @@ class Place extends Component{
             place: this.props.navigation.getParam("place"),
             user: this.props.navigation.getParam("user"),
             isFavourites: false,
+            lotacao: '',
+            porte: '',
         }
 
     }
@@ -25,7 +27,7 @@ class Place extends Component{
 
     addFavourite(){
       console.log(this.state)
-      fetch('http://192.168.0.108:3300/favourite',{
+      fetch('http://192.168.0.104:3300/favourite',{
           method: 'POST',
           headers: {
             Accept: 'application/json',
@@ -49,7 +51,7 @@ class Place extends Component{
 
     removeFavourite(){
       console.log(this.state)
-      fetch(`http://192.168.0.108:3300/favourite/${this.state.user.user_id}&${this.state.place.place_id}`,{
+      fetch(`http://192.168.0.104:3300/favourite/${this.state.user.user_id}&${this.state.place.place_id}`,{
           method: 'DELETE',
         })
           .then((response) => response.json())
@@ -75,7 +77,7 @@ class Place extends Component{
 
     isFavourites(){
       console.log(this.state)
-      fetch(`http://192.168.0.108:3300/favourite/${this.state.user.user_id}&${this.state.place.place_id}`,{
+      fetch(`http://192.168.0.104:3300/favourite/${this.state.user.user_id}&${this.state.place.place_id}`,{
           method: 'GET',
         })
           .then((response) => response.json())
@@ -92,15 +94,36 @@ class Place extends Component{
           });
     }
 
+    getPlaceStatus(){
+      fetch(`http://192.168.0.104:3300/placeStatus/${this.state.place.place_id}`,{
+          method: 'GET',
+        })
+          .then((response) => response.json())
+          .then((responseJson) => {
+            console.log(responseJson);
+            this.setState({
+              lotacao: responseJson.lotacao,
+              porte: responseJson.porte,
+            })
+            console.log(this.state)
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+    }
+
     componentDidMount(){
       console.log(this.state.place)
       this.isFavourites()
+      this.getPlaceStatus()
     }
-    
 
+    
     render(){
         const { navigation } = this.props;
         var imgSource = this.state.isFavourites? Heart : desHeart;
+        const {porte, lotacao} = this.state
+        console.log(porte, lotacao)
         return(
             <View style={styles.container}>
                 <ImageBackground source={require('../images/Estabelecimento.jpg')} style={styles.image}>
@@ -124,32 +147,20 @@ class Place extends Component{
                     <PlaceInfo 
                         icon={require('../images/user.png')}
                         title="Indicação atual"
-                        data="TODO"
+                        data={lotacao}
                     />
 
                     <PlaceInfo 
                         icon={require('../images/user.png')}
                         title="Porte do estabelecimento"
-                        data="TODO"
+                        data={porte}
                     />                    
 
                     <PlaceInfo 
                         icon={require('../images/user.png')}
                         title="Quantidade máxima de pessoas:"
-                        data="TODO"
+                        data={this.state.place.max_qnt}
                     />                    
-
-                    <PlaceInfo 
-                        icon={require('../images/user.png')}
-                        title="Melhor horário"
-                        data="TODO"
-                    />                    
-
-                    <PlaceInfo 
-                        icon={require('../images/user.png')}
-                        title="Horário de pico"
-                        data="TODO"
-                    />
                 </View>
             </View>
       
@@ -178,6 +189,8 @@ const styles = StyleSheet.create({
   placeInfoBox: {
     marginBottom: 40,
     padding: "5%",
+    paddingBottom: 200,
+
   },
   namePlaceText: {
       fontSize: 20,
