@@ -30,14 +30,14 @@ class RequestPlace extends Component {
     }
     this.setState({error: ''})
     console.log(this.state)
-    fetch('http://192.168.0.108:3300/createRequest',{
+    fetch('http://192.168.0.104:3300/createRequest',{
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            nome: this.state.nome,
+            name: this.state.nome,
             cnpj: this.state.cnpj,
             area: this.state.area,
             maxQnt: this.state.capacidade,
