@@ -6,6 +6,7 @@ import desHeart from '../images/des_heart.png'
 import React, { Component } from "react";
 import { withNavigation } from 'react-navigation';
 import { StyleSheet, View, Image, Text, TouchableOpacity, ImageBackground, StatusBar } from 'react-native';
+import { Tooltip } from 'react-native-elements';
 
 
 
@@ -144,6 +145,17 @@ class Place extends Component{
                 </ImageBackground>
 
                 <View style={styles.placeInfoBox}>
+                    <Tooltip height={150} width={300} popover={<View><Text>Porcentagem de lotação do estabelecimento calculado de acordo com a lotação máxima.</Text>
+                                      <Text>Abaixo de 30%: Vazio</Text>
+                                      <Text>Entre 30% e 60%: Moderado</Text>
+                                      <Text>Entre 60% e 90%: Cheio</Text>
+                                      <Text>Acima de 90%: Lotado</Text></View>}>
+                      <Image
+                        style={styles.tooltip}
+                        source={require('../images/question.png')}
+                      />
+                    </Tooltip>
+
                     <PlaceInfo 
                         icon={require('../images/user.png')}
                         title="Indicação atual"
@@ -214,6 +226,11 @@ const styles = StyleSheet.create({
   favoriteIcon: {
     width: 30,
     height: 30,
+  },
+  tooltip: {
+    width: 15,
+    height: 15,
+    alignSelf: "flex-end",
   }
 });
 
