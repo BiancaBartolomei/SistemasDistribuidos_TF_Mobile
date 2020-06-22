@@ -24,7 +24,7 @@ class Login extends Component {
     if(email === '' || senha === ''){
         this.setState({erro: "Preencha o campo de email e senha corretamente."})
     } else {
-      fetch('http://192.168.4.102:3300/login',{
+      fetch('http://192.168.0.110:3300/login',{
         method: 'POST',
         headers: {
           Accept: 'application/json',

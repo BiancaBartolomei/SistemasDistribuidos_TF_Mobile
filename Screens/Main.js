@@ -19,7 +19,7 @@ class Main extends Component {
 
 
   getFavourites(){
-    const url = `http://192.168.4.102:3300/favourites/${this.state.user.user_id}`;
+    const url = `http://192.168.0.110:3300/favourites/${this.state.user.user_id}`;
     fetch(url, {
       method: 'GET',
     })
