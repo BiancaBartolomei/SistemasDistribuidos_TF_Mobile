@@ -25,7 +25,7 @@ class SearchPlace extends Component {
 
   makeRemoteRequest(){
     this.value = this.state.search.replace(" ", "_")
-    const url = `http://192.168.0.108:3300/place/${this.value}`;
+    const url = `http://192.168.4.102:3300/place/${this.value}`;
     fetch(url, {
       method: 'GET',
     })
@@ -117,6 +117,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   searchInput: {
+    fontFamily: 'Raleway-Regular',
     width: "100%",
     height: 40,
     paddingHorizontal: 10,

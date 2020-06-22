@@ -6,7 +6,6 @@ import desHeart from '../images/des_heart.png'
 import React, { Component } from "react";
 import { withNavigation } from 'react-navigation';
 import { StyleSheet, View, Image, Text, TouchableOpacity, ImageBackground, StatusBar } from 'react-native';
-import { Tooltip } from 'react-native-elements';
 
 
 
@@ -19,8 +18,6 @@ class Place extends Component{
             place: this.props.navigation.getParam("place"),
             user: this.props.navigation.getParam("user"),
             isFavourites: false,
-            lotacao: '',
-            porte: '',
         }
 
     }
@@ -28,7 +25,7 @@ class Place extends Component{
 
     addFavourite(){
       console.log(this.state)
-      fetch('http://192.168.0.104:3300/favourite',{
+      fetch('http://192.168.4.102:3300/favourite',{
           method: 'POST',
           headers: {
             Accept: 'application/json',
@@ -52,7 +49,7 @@ class Place extends Component{
 
     removeFavourite(){
       console.log(this.state)
-      fetch(`http://192.168.0.104:3300/favourite/${this.state.user.user_id}&${this.state.place.place_id}`,{
+      fetch(`http://192.168.4.102:3300/favourite/${this.state.user.user_id}&${this.state.place.place_id}`,{
           method: 'DELETE',
         })
           .then((response) => response.json())
@@ -78,7 +75,7 @@ class Place extends Component{
 
     isFavourites(){
       console.log(this.state)
-      fetch(`http://192.168.0.104:3300/favourite/${this.state.user.user_id}&${this.state.place.place_id}`,{
+      fetch(`http://192.168.4.102:3300/favourite/${this.state.user.user_id}&${this.state.place.place_id}`,{
           method: 'GET',
         })
           .then((response) => response.json())
@@ -95,36 +92,15 @@ class Place extends Component{
           });
     }
 
-    getPlaceStatus(){
-      fetch(`http://192.168.0.104:3300/placeStatus/${this.state.place.place_id}`,{
-          method: 'GET',
-        })
-          .then((response) => response.json())
-          .then((responseJson) => {
-            console.log(responseJson);
-            this.setState({
-              lotacao: responseJson.lotacao,
-              porte: responseJson.porte,
-            })
-            console.log(this.state)
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-    }
-
     componentDidMount(){
       console.log(this.state.place)
       this.isFavourites()
-      this.getPlaceStatus()
     }
-
     
+
     render(){
         const { navigation } = this.props;
         var imgSource = this.state.isFavourites? Heart : desHeart;
-        const {porte, lotacao} = this.state
-        console.log(porte, lotacao)
         return(
             <View style={styles.container}>
                 <ImageBackground source={require('../images/Estabelecimento.jpg')} style={styles.image}>
@@ -145,34 +121,35 @@ class Place extends Component{
                 </ImageBackground>
 
                 <View style={styles.placeInfoBox}>
-                    <Tooltip height={150} width={300} popover={<View><Text>Porcentagem de lotação do estabelecimento calculado de acordo com a lotação máxima.</Text>
-                                      <Text>Abaixo de 30%: Vazio</Text>
-                                      <Text>Entre 30% e 60%: Moderado</Text>
-                                      <Text>Entre 60% e 90%: Cheio</Text>
-                                      <Text>Acima de 90%: Lotado</Text></View>}>
-                      <Image
-                        style={styles.tooltip}
-                        source={require('../images/question.png')}
-                      />
-                    </Tooltip>
-
                     <PlaceInfo 
                         icon={require('../images/user.png')}
                         title="Indicação atual"
-                        data={lotacao}
+                        data="TODO"
                     />
 
                     <PlaceInfo 
                         icon={require('../images/user.png')}
                         title="Porte do estabelecimento"
-                        data={porte}
+                        data="TODO"
                     />                    
 
                     <PlaceInfo 
                         icon={require('../images/user.png')}
                         title="Quantidade máxima de pessoas:"
-                        data={this.state.place.max_qnt}
+                        data="TODO"
                     />                    
+
+                    <PlaceInfo 
+                        icon={require('../images/user.png')}
+                        title="Melhor horário"
+                        data="TODO"
+                    />                    
+
+                    <PlaceInfo 
+                        icon={require('../images/user.png')}
+                        title="Horário de pico"
+                        data="TODO"
+                    />
                 </View>
             </View>
       
@@ -201,15 +178,14 @@ const styles = StyleSheet.create({
   placeInfoBox: {
     marginBottom: 40,
     padding: "5%",
-    paddingBottom: 200,
-
   },
   namePlaceText: {
       fontSize: 20,
-      fontWeight: "bold",
+      fontFamily: 'Raleway-SemiBold',
       color: "white",
   },
   addressPlaceText: {
+    fontFamily: 'Raleway-Italic',
     color: "white",
   },
   image: {
@@ -226,11 +202,6 @@ const styles = StyleSheet.create({
   favoriteIcon: {
     width: 30,
     height: 30,
-  },
-  tooltip: {
-    width: 15,
-    height: 15,
-    alignSelf: "flex-end",
   }
 });
 

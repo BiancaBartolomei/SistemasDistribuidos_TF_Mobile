@@ -4,7 +4,7 @@
 import 'react-native-gesture-handler';
 
 import React, {Component} from 'react';
-import { Button, StyleSheet, View, Text, TouchableOpacity, Image, TextInput, FormData } from 'react-native';
+import { Button, StyleSheet, View, Text, TouchableOpacity, Image, TextInput, FormData, Alert } from 'react-native';
 
 
 class CreateUser2 extends Component {
@@ -18,32 +18,48 @@ class CreateUser2 extends Component {
           email: '',
           senha: '',
           senha_conf: '',
-          erro: '',
         };
       }
 
   render() {
     const {nome, cpf, telefone, email, senha, senha_conf } = this.state;
     
-    
+    const emptyFields=()=>{
+      Alert.alert(
+      'Erro',
+      'Por favor, preencha todos os campos.',
+      [
+
+      ],
+      { cancelable: true }
+      );
+    }
+
+    const differentPasswords=()=>{
+      Alert.alert(
+      'Erro',
+      'As senhas preenchidas são diferentes!',
+      [
+
+      ],
+      { cancelable: true }
+      );
+    }
     
     const checkValues = (nome, cpf, telefone, email, senha, senha_conf) => {
         console.log('a')
         if(email === '' || senha === '' || senha_conf === ''){
-            this.setState({erro: 'Verifique se todos os campos estão preenchidos'});
+            emptyFields();
           } else if(senha !== senha_conf) {
-            this.setState({erro: 'Senhas preenchidas diferentes'});
+            differentPasswords();
           } else {
-            this.setState({erro: ''});
             createUser(nome, cpf, telefone, email, senha);
           }
-        
-
       }
       
       const createUser = (nome, cpf, telefone, email, senha) => {
           console.log('b')
-        fetch('http://192.168.15.14:3300/createUser',{
+        fetch('http://192.168.4.102:3300/createUser', {
           method: 'POST',
           headers: {
             Accept: 'application/json',
@@ -54,13 +70,13 @@ class CreateUser2 extends Component {
             cpf: cpf,
             telefone: telefone,
             email: email,
-            senha: senha
+            senha: senha,
           })
         })
           .then((response) => response.json())
           .then((responseJson) => {
              console.log(responseJson);
-             this.props.navigation.navigate('Login')
+             this.props.navigation.navigate('Login');
           })
           .catch((error) => {
              console.error(error);
@@ -87,17 +103,16 @@ class CreateUser2 extends Component {
       <TextInput style={styles.inputStyle} 
                 onChangeText={email => this.setState({email})}
                 defaultValue={email}/>
-      <Text>Crie uma senha:</Text>
+      <Text style={styles.formLabel}>Crie uma senha:</Text>
       <TextInput style={styles.inputStyle} onChangeText={senha => this.setState({senha})}
-                defaultValue={senha}/>
-      <Text>Confirme sua senha:</Text>
+                defaultValue={senha} secureTextEntry></TextInput>
+      <Text style={styles.formLabel}>Confirme sua senha:</Text>
       <TextInput style={styles.inputStyle} onChangeText={senha_conf => this.setState({senha_conf})}
-                defaultValue={senha_conf}/>
-                 <Text style={styles.errorText}>{this.state.erro}</Text>
+                defaultValue={senha_conf} secureTextEntry></TextInput>
     </View>
     <TouchableOpacity
                   onPress={()=>checkValues(nome, cpf, telefone, email, senha, senha_conf)}
-                  style={styles.buttonEnter}><Text style={styles.buttonEnterText}>Cadastrar</Text></TouchableOpacity>
+                  style={styles.buttonEnter}><Text style={styles.buttonEnterText}>CADASTRAR</Text></TouchableOpacity>
 
     </View>
   </View>
@@ -130,46 +145,44 @@ const styles = StyleSheet.create({
         color: '#ffff'
       },
       formLabel: {
-        fontFamily: 'Arial',
+        fontFamily: 'Raleway-SemiBold',
         fontSize: 15,
         color: "#000000",
       },
-      errorText: {
-        fontFamily: 'Arial',
-        fontSize: 15,
-        color: "red",
-        textAlign: "center",
-      },
       inputStyle: {
+        fontFamily: "Raleway-Regular",
         marginTop: 10,
-        marginBottom: 10,
+        marginBottom: 20,
         width: 300,
-        height: 40,
-        paddingHorizontal: 10,
+        height: 45,
+        paddingHorizontal: 20,
         borderRadius: 5,
         backgroundColor: '#ffffff',
+        shadowOffset:{  width: 10,  height: 10,  },
+        shadowColor: 'black',
+        shadowOpacity: 1.0,
+        elevation: 2,
       },
       formTextBox: {
-        paddingTop: 50,
+        paddingTop: 70,
         alignItems: "center",
         justifyContent:"center",
-        paddingBottom: 40
+        paddingBottom: 40,
       },
       formInputBox: {
         alignItems: "center",
         justifyContent:"center",
       },
       formText: {
-        fontFamily: 'Arial',
-        fontSize: 25,
+        fontFamily: 'Raleway-Light',
+        fontSize: 20,
         color: "#000000",
         textAlign: "center",
       },
       formTextBold: {
-        fontFamily: 'Arial',
-        fontSize: 25,
+        fontFamily: 'Raleway-Bold',
+        fontSize: 20,
         color: "#000000",
-        fontWeight: "bold",
       },
       formButton: {
         marginLeft: "65%",
@@ -181,11 +194,31 @@ const styles = StyleSheet.create({
         fontSize: 15,
       },
       buttonCadastro: {
-        justifyContent: "flex-end",
-        alignItems: "flex-end",
+        alignItems: "center",
       },
       buttonCadastroText: {
-        color: "blue"
+        fontFamily: 'Raleway-SemiBold',
+        color: "#578ee4",
+        fontSize: 16,
+        marginTop: "2%",
+      },
+      buttonEnter: {
+        marginTop: "5%",
+        backgroundColor: "#578ee4",
+        paddingVertical: 14,
+        width: 300,
+        borderRadius: 10,
+        alignItems: "center",
+        shadowOffset:{  width: 10,  height: 10,  },
+        shadowColor: 'black',
+        shadowOpacity: 1.0,
+        elevation: 5,
+      },
+      buttonEnterText: {
+        fontFamily: 'Raleway-Bold',
+        color: "white",
+        fontSize: 14,
+        letterSpacing: 2,
       },
 });
 export default CreateUser2;

@@ -24,7 +24,7 @@ class Login extends Component {
     if(email === '' || senha === ''){
         this.setState({erro: "Preencha o campo de email e senha corretamente."})
     } else {
-      fetch('http://192.168.0.108:3300/login',{
+      fetch('http://192.168.4.102:3300/login',{
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -56,21 +56,21 @@ class Login extends Component {
       <ImageBackground source={require('mobile/Assets/Login.jpg')} style={styles.image} >
         <View>
           <View style={styles.formTextBox}>
-            <Text style={styles.formText}>Precisamos das seguintes 
-            <Text style={styles.formTextBold}>{" "}informações{" "}</Text> 
-            para dar {"\n"}
-            continuidade ao seu {"\n"}
-            cadastro</Text>
+            <Text style={styles.formText}>Monitore 
+            <Text style={styles.formTextBold}>{" "}aglomerações{" "}{"\n"}</Text>
+            em estabelecimentos{"\n"}essenciais e saia de casa{"\n"} em
+            <Text style={styles.formTextBold}>{" "}segurança{" "}</Text>
+            </Text>
           </View> 
           <View style={styles.formTextBox}>
             <TextInput style={styles.inputStyle} placeholder="Email" name="email"         onChangeText={email => this.setState({email})}
               defaultValue={email} ></TextInput>
             <TextInput style={styles.inputStyle} placeholder="Senha" onChangeText={senha => this.setState({senha})}
-              defaultValue={senha}></TextInput>
+              defaultValue={senha} secureTextEntry></TextInput>
             <Text style={styles.errorText}>{this.state.erro}</Text>
             <TouchableOpacity
                   onPress={()=>loginAuth(email, senha)}
-                  style={styles.buttonEnter}><Text style={styles.buttonEnterText}>Entrar</Text></TouchableOpacity>
+                  style={styles.buttonEnter}><Text style={styles.buttonEnterText}>ENTRAR</Text></TouchableOpacity>
           </View>
         <Text style={styles.cadastroText}>Não possui conta?</Text>
         <TouchableOpacity
@@ -102,52 +102,50 @@ const styles = StyleSheet.create({
     color: '#ffff'
   },
   formLabel: {
-    fontFamily: 'Arial',
+    fontFamily: 'Raleway-SemiBold',
     fontSize: 15,
     color: "#000000",
   },
   inputStyle: {
+    fontFamily: "Raleway-Regular",
     marginTop: 10,
     marginBottom: 20,
     width: 300,
-    height: 40,
-    paddingHorizontal: 10,
+    height: 45,
+    paddingHorizontal: 20,
     borderRadius: 5,
     backgroundColor: '#ffffff',
+    shadowOffset:{  width: 10,  height: 10,  },
+    shadowColor: 'black',
+    shadowOpacity: 1.0,
+    elevation: 2,
   },
   formTextBox: {
-    paddingTop: 40,
+    paddingTop: 20,
     alignItems: "center",
     justifyContent:"center",
-    paddingBottom: 25
+    paddingBottom: 40,
   },
   formInputBox: {
     alignItems: "center",
     justifyContent:"center",
   },
-  formText: {
-    fontFamily: 'Arial',
-    fontSize: 25,
-    color: "#000000",
-    textAlign: "center",
-  },
   errorText: {
-    fontFamily: 'Arial',
+    fontFamily: 'Raleway-SemiBold',
     fontSize: 15,
-    color: "red",
+    color: "#db5342",
     textAlign: "center",
   },
-  cadastroText: {
-    fontFamily: 'Arial',
-    fontSize: 15,
-    color: "black",
+  formText: {
+    fontFamily: 'Raleway-Light',
+    fontSize: 20,
+    color: "#000000",
     textAlign: "center",
   },
   formTextBold: {
-    fontFamily: 'Arial',
-    fontSize: 25,
+    fontFamily: 'Raleway-Bold',
+    fontSize: 20,
     color: "#000000",
-    fontWeight: "bold",
   },
   formButton: {
     marginLeft: "65%",
@@ -158,23 +156,38 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontSize: 15,
   },
-  buttonEnter: {
-    backgroundColor: 'blue',
-    paddingVertical: 12,
-    width: 300,
-    borderRadius:5,
-    alignItems: "center"
-
-  },
-  buttonEnterText: {
-    color: "white",
-    fontSize: 18
+  cadastroText: {
+    fontFamily: 'Raleway-Regular',
+    fontSize: 16,
+    color: "black",
+    textAlign: "center",
   },
   buttonCadastro: {
     alignItems: "center",
   },
   buttonCadastroText: {
-    color: "blue"
+    fontFamily: 'Raleway-SemiBold',
+    color: "#578ee4",
+    fontSize: 16,
+    marginTop: "2%",
+  },
+  buttonEnter: {
+    marginTop: "5%",
+    backgroundColor: "#578ee4",
+    paddingVertical: 14,
+    width: 300,
+    borderRadius: 10,
+    alignItems: "center",
+    shadowOffset:{  width: 10,  height: 10,  },
+    shadowColor: 'black',
+    shadowOpacity: 1.0,
+    elevation: 5,
+  },
+  buttonEnterText: {
+    fontFamily: 'Raleway-Bold',
+    color: "white",
+    fontSize: 14,
+    letterSpacing: 2,
   },
 }); 
 
