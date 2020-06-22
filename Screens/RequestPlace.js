@@ -5,7 +5,7 @@ import 'react-native-gesture-handler';
 import React, {Component} from 'react';
 import { withNavigation } from 'react-navigation';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { Button, StyleSheet, View, Text, TouchableOpacity, Image, TextInput } from 'react-native';
+import { Button, StyleSheet, View, Text, TouchableOpacity, Image, TextInput, Alert } from 'react-native';
 
 class RequestPlace extends Component {
   constructor(props) {
@@ -19,43 +19,64 @@ class RequestPlace extends Component {
       capacidade: '',
       endereco: '',
       isLoading: true,
-      error: '',
     };
-  }
-
-  sendRequestPlace(name, cnpj, area, capacidade, endereco){
-    if(name === '' || cnpj === '' || area === '' || capacidade === '' || endereco === '' ){
-      this.setState({error: "Preencha todos os campos."})
-      return
-    }
-    this.setState({error: ''})
-    console.log(this.state)
-    fetch('http://192.168.0.104:3300/createRequest',{
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            name: this.state.nome,
-            cnpj: this.state.cnpj,
-            area: this.state.area,
-            maxQnt: this.state.capacidade,
-            userId: this.state.user.user_id,
-            endereco: this.state.endereco,
-        })
-      })
-        .then((response) => response.json())
-        .then((responseJson) => {
-           console.log("Recebeu: " + responseJson);
-        })
-        .catch((error) => {
-          //  console.error(error);
-        });
   }
 
   render() {
     const { name, cnpj, area, capacidade, endereco, isLoading } = this.state;
+
+    const errorMessage=()=>{
+      Alert.alert(
+      'Erro',
+      'Por favor, preencha todos os campos.',
+      [
+
+      ],
+      { cancelable: true }
+      );
+    }
+
+    const successMessage=()=>{
+      Alert.alert(
+      'Requisição enviada!',
+      'Sua requisição entrará em análise e, se aprovada, seu estabelecimento passará a fazer parte de nosso sistema.',
+      [
+
+      ],
+      { cancelable: true }
+      );
+    }
+
+    const sendRequestPlace=(name, cnpj, area, capacidade, endereco)=>{
+      if(name === '' || cnpj === '' || area === '' || capacidade === '' || endereco === '' ){
+        errorMessage();
+        return
+      }
+      console.log(this.state)
+      fetch('http://192.168.4.102:3300/createRequest',{
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+              nome: this.state.nome,
+              cnpj: this.state.cnpj,
+              area: this.state.area,
+              maxQnt: this.state.capacidade,
+              userId: this.state.user.user_id,
+              endereco: this.state.endereco,
+          })
+        })
+          .then((response) => response.json())
+          .then((responseJson) => {
+             console.log("Recebeu: " + responseJson);
+             successMessage();
+          })
+          .catch((error) => {
+            //  console.error(error);
+          });
+    }
     
     return (
       <KeyboardAwareScrollView 
@@ -64,11 +85,11 @@ class RequestPlace extends Component {
         resetScrollToCoords={{ x: 0, y: 0 }}>
 
           <View style={styles.formTextBox}>
-            <Text style={styles.formText}>Cadastrar estabelecimento</Text>
+            <Text style={styles.formTitle}>Cadastrar estabelecimento</Text>
 
             <View style={styles.inputBox}>
                 <Text style={styles.formLabel}>Nome</Text>
-                <TextInput style={styles.inputStyle} placeholder="Nome fantasia do estabelecimento" name="name"
+                <TextInput style={styles.inputStyle} placeholder="Nome do estabelecimento" name="name"
                 onChangeText={nome => this.setState({nome})}
                 defaultValue={name} >
                 </TextInput>
@@ -108,17 +129,13 @@ class RequestPlace extends Component {
                 </TextInput>
             </View>
 
-            <View style={styles.textInfoBox}>
-              <Text style={styles.textInfo}>{this.state.error}</Text>
-            </View>
-
             <TouchableOpacity
-                  onPress={()=>this.sendRequestPlace(name, cnpj, area, capacidade, endereco)}
+                  onPress={() => sendRequestPlace(name, cnpj, area, capacidade, endereco)}
                   style={styles.buttonEnter}><Text style={styles.buttonEnterText}>ENVIAR REQUISIÇÃO</Text></TouchableOpacity>
 
             
             <View style={styles.textInfoBox}>
-                <Text style={styles.textInfo}>*SUJEITO A APROVAÇÃO</Text>
+                <Text style={styles.textInfo}>*SUJEITO À APROVAÇÃO</Text>
             </View>
         </View>  
       </KeyboardAwareScrollView> 
@@ -139,79 +156,70 @@ export default RequestPlace
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    color: '#ffff'
+      flex: 1,
+      color: '#ffff'
   },
   formLabel: {
-    fontFamily: 'Arial',
-    fontSize: 15,
-    color: "#000000",
+      fontFamily: 'Raleway-Bold',
+      fontSize: 15,
+      color: "#000000",
   },
   inputStyle: {
-    marginTop: 10,
-    marginBottom: 20,
-    width: 300,
-    height: 40,
-    paddingHorizontal: 10,
-    borderRadius: 5,
-    backgroundColor: '#ffffff',
+      fontFamily: 'Raleway-Regular',
+      marginTop: 10,
+      marginBottom: 20,
+      width: 300,
+      height: 40,
+      paddingHorizontal: 20,
+      borderRadius: 5,
+      backgroundColor: '#ffffff',
+      shadowOffset:{  width: 10,  height: 10,  },
+      shadowColor: 'black',
+      shadowOpacity: 1.0,
+      elevation: 2,
   },
   formTextBox: {
-    paddingTop: 40,
-    alignItems: "center",
-    justifyContent:"center",
-    paddingBottom: 40
+      paddingTop: 40,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingBottom: 40
   },
   formInputBox: {
-    alignItems: "center",
-    justifyContent:"center",
+      alignItems: "center",
+      justifyContent: "center",
   },
-  formText: {
-    fontFamily: 'Arial',
-    fontSize: 25,
-    color: "#000000",
-    textAlign: "center",
-    marginBottom: 10,
-  },
-  formTextBold: {
-    fontFamily: 'Arial',
-    fontSize: 25,
-    color: "#000000",
-    fontWeight: "bold",
-  },
-  formButton: {
-    marginLeft: "65%",
-    justifyContent: "flex-end", 
-    alignItems: "flex-end"
-  },
-  formButtonText : {
-    color: '#000000',
-    fontSize: 15,
+  formTitle: {
+      fontFamily: 'Raleway-Light',
+      fontSize: 23,
+      color: "#000000",
+      textAlign: "center",
+      marginBottom: "10%",
+      width: "80%",
   },
   buttonEnter: {
-
-  },
-  textInfo: {
-      color: "red",
-      fontSize: 12,
-  },
-  textInfoBox: {
-      // flex: 1,
-      // justifyContent: "flex-start",
-      // alignItems: "flex-start",
-      paddingVertical: 10,
-  },
-  buttonEnter: {
-    backgroundColor: 'blue',
-    paddingVertical: 12,
-    width: 300,
-    borderRadius:10,
-    alignItems: "center"
-
+      marginTop: "5%",
+      backgroundColor: "#42b8df",
+      paddingVertical: 14,
+      width: 300,
+      borderRadius: 10,
+      alignItems: "center",
+      shadowOffset:{  width: 10,  height: 10,  },
+      shadowColor: 'black',
+      shadowOpacity: 1.0,
+      elevation: 5,
   },
   buttonEnterText: {
-    color: "white",
-    fontSize: 18
+      fontFamily: 'Raleway-Bold',
+      color: "white",
+      fontSize: 14,
+      letterSpacing: 1.5,
+  },
+  textInfo: {
+      marginTop: "8%",  
+      textAlign: "left",
+      color: "#db5342",
+      fontFamily: 'Raleway-SemiBold',
+      fontSize: 13,
   },
 }); 
 

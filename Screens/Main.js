@@ -2,48 +2,11 @@
 // https://aboutreact.com/react-native-navigation-drawer //
 import 'react-native-gesture-handler';
 import PlaceItem from '../Components/PlaceItem'
+
 import React, {Component} from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Image, TextInput, FlatList, ImageBackground, AppRegistry,  Alert, AsyncStorage, Button } from 'react-native';
-import Geolocation from '@react-native-community/geolocation';  
+import { StyleSheet, View, Text, TouchableOpacity, Image, TextInput, FlatList, ImageBackground } from 'react-native';
 
-
-
-
-
-const LogLocation = async (id) => {
-
-  Geolocation.getCurrentPosition(info => {
-    fetch('http://192.168.15.14:3300/sendLocation',{
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        user_id: id,
-        lat: info["coords"]["latitude"],
-        long: info["coords"]["longitude"]
-      })
-    })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        console.log("Foi: "+info);
-      })
-      .catch((error) => {
-         console.error(error);
-      });
-
-  });
-
-  setInterval(()=>{LogLocation(id)}, 60000)
-
-};
-
-
-
-AppRegistry.registerHeadlessTask('LogLocation', () => LogLocation());
-
-export default class Main extends Component {
+class Main extends Component {
   constructor(props) {
     super(props);
 
@@ -54,8 +17,9 @@ export default class Main extends Component {
     };
   }
 
+
   getFavourites(){
-    const url = `http://192.168.0.110:3300/favourites/${this.state.user.user_id}`;
+    const url = `http://192.168.4.102:3300/favourites/${this.state.user.user_id}`;
     fetch(url, {
       method: 'GET',
     })
@@ -68,11 +32,7 @@ export default class Main extends Component {
       });
   }
 
-
   componentDidMount(){
-    var id = this.state.user.user_id
-    this.timer = LogLocation(id);
-
     const { navigation } = this.props;
     this.getFavourites()
     this.navFocusListener = navigation.addListener('didFocus', () => {
@@ -96,7 +56,7 @@ export default class Main extends Component {
 
                 <View style={styles.menuButtonBox}>
                   <Image source={require('../images/profile.png')} style={styles.iconImage}/>
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={() => {navigation.navigate('EditProfile', {user: this.state.user})}}>
                     <Text style={styles.menuButtonText}>EDITAR INFORMAÇÕES PESSOAIS</Text>
                   </TouchableOpacity>
                 </View>
@@ -260,3 +220,4 @@ const styles = StyleSheet.create({
 });
 
 
+export default Main

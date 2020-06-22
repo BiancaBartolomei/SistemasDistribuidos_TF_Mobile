@@ -4,7 +4,7 @@
 import 'react-native-gesture-handler';
 
 import React, {Component} from 'react';
-import { Button, StyleSheet, View, Text, TouchableOpacity, Image, TextInput, FormData } from 'react-native';
+import { Button, StyleSheet, View, Text, TouchableOpacity, Image, TextInput, FormData, Alert } from 'react-native';
 
 
 class CreateUser extends Component {
@@ -14,18 +14,28 @@ class CreateUser extends Component {
       nome: '',
       cpf: '',
       telefone: '',
-      error: ''
     };
   }
 
   render() {
 
     const { nome, cpf, telefone } = this.state;
+
+    const errorMessage=()=>{
+      Alert.alert(
+      'Erro',
+      'Por favor, preencha todos os campos.',
+      [
+
+      ],
+      { cancelable: true }
+      );
+    }
+
     const goNextPage = (nome, cpf, telefone) => {
       if(nome === '' || cpf === '' || telefone === ''){
-        this.setState({erro: 'Verifique se todos os campos estão preenchidos'});
+        errorMessage();
       } else {
-        this.setState({erro: ''});
         this.props.navigation.navigate('CreateUser2', {
           nome: nome,
           cpf: cpf,
@@ -52,15 +62,14 @@ class CreateUser extends Component {
       <TextInput style={styles.inputStyle} 
                  onChangeText={nome => this.setState({nome})}
                 defaultValue={nome}/>
-      <Text>CPF:</Text>
+      <Text style={styles.formLabel}>CPF:</Text>
       <TextInput style={styles.inputStyle}
                  onChangeText={cpf => this.setState({cpf})}
                  defaultValue={cpf}/>
-      <Text>Telefone:</Text>
+      <Text style={styles.formLabel}>Telefone:</Text>
       <TextInput style={styles.inputStyle}
                  onChangeText={telefone => this.setState({telefone})}
                  defaultValue={telefone}/>
-                     <Text style={styles.errorText}>{this.state.erro}</Text>
     </View>
 
     <TouchableOpacity
@@ -71,7 +80,7 @@ class CreateUser extends Component {
     </View>
   </View>
   );
-}
+  }
 };
 
 
@@ -87,46 +96,44 @@ const styles = StyleSheet.create({
     color: '#ffff'
   },
   formLabel: {
-    fontFamily: 'Arial',
+    fontFamily: 'Raleway-SemiBold',
     fontSize: 15,
     color: "#000000",
   },
-  errorText: {
-    fontFamily: 'Arial',
-    fontSize: 15,
-    color: "red",
-    textAlign: "center",
-  },
   inputStyle: {
+    fontFamily: "Raleway-Regular",
     marginTop: 10,
     marginBottom: 20,
     width: 300,
-    height: 40,
-    paddingHorizontal: 10,
+    height: 45,
+    paddingHorizontal: 20,
     borderRadius: 5,
     backgroundColor: '#ffffff',
+    shadowOffset:{  width: 10,  height: 10,  },
+    shadowColor: 'black',
+    shadowOpacity: 1.0,
+    elevation: 2,
   },
   formTextBox: {
-    paddingTop: 50,
+    paddingTop: 100,
     alignItems: "center",
     justifyContent:"center",
-    paddingBottom: 40
+    paddingBottom: 40,
   },
   formInputBox: {
     alignItems: "center",
     justifyContent:"center",
   },
   formText: {
-    fontFamily: 'Arial',
-    fontSize: 25,
+    fontFamily: 'Raleway-Light',
+    fontSize: 20,
     color: "#000000",
     textAlign: "center",
   },
   formTextBold: {
-    fontFamily: 'Arial',
-    fontSize: 25,
+    fontFamily: 'Raleway-Bold',
+    fontSize: 20,
     color: "#000000",
-    fontWeight: "bold",
   },
   formButton: {
     marginLeft: "65%",
@@ -138,11 +145,13 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   buttonCadastro: {
-    justifyContent: "flex-end",
-    alignItems: "flex-end",
+    alignItems: "center",
   },
   buttonCadastroText: {
-    color: "blue"
+    fontFamily: 'Raleway-SemiBold',
+    color: "#578ee4",
+    fontSize: 16,
+    marginTop: "2%",
   },
 });
 export default CreateUser;

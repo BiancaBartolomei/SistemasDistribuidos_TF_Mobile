@@ -5,6 +5,7 @@ import CreateUser2 from './CreateUser2';
 import SearchPlace from './SearchPlace';
 import Place from './Place';
 import RequestPlace from './RequestPlace';
+import EditProfile from './EditProfile';
 
 import { createAppContainer } from 'react-navigation';
 
@@ -17,6 +18,7 @@ const Routes = createAppContainer(
     CreateUser: CreateUser,
     CreateUser2: CreateUser2,
     RequestPlace: RequestPlace,
+    EditProfile: EditProfile,
     
     Main: {
       screen: Main,
