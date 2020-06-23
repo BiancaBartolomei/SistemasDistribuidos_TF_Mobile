@@ -53,7 +53,7 @@ class RequestPlace extends Component {
         return
       }
       console.log(this.state)
-      fetch('http://192.168.0.110:3300/createRequest',{
+      fetch('http://192.168.15.14:3300/createRequest',{
           method: 'POST',
           headers: {
             Accept: 'application/json',

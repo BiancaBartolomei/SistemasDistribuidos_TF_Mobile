@@ -28,7 +28,7 @@ class Place extends Component{
 
     addFavourite(){
       console.log(this.state)
-      fetch('http://192.168.0.104:3300/favourite',{
+      fetch('http://192.168.15.14:3300/favourite',{
           method: 'POST',
           headers: {
             Accept: 'application/json',
@@ -52,7 +52,7 @@ class Place extends Component{
 
     removeFavourite(){
       console.log(this.state)
-      fetch(`http://192.168.0.104:3300/favourite/${this.state.user.user_id}&${this.state.place.place_id}`,{
+      fetch(`http://192.168.15.14:3300/favourite/${this.state.user.user_id}&${this.state.place.place_id}`,{
           method: 'DELETE',
         })
           .then((response) => response.json())
@@ -78,7 +78,7 @@ class Place extends Component{
 
     isFavourites(){
       console.log(this.state)
-      fetch(`http://192.168.0.104:3300/favourite/${this.state.user.user_id}&${this.state.place.place_id}`,{
+      fetch(`http://192.168.15.14:3300/favourite/${this.state.user.user_id}&${this.state.place.place_id}`,{
           method: 'GET',
         })
           .then((response) => response.json())
@@ -96,7 +96,7 @@ class Place extends Component{
     }
 
     getPlaceStatus(){
-      fetch(`http://192.168.0.104:3300/placeStatus/${this.state.place.place_id}`,{
+      fetch(`http://192.168.15.14:3300/placeStatus/${this.state.place.place_id}`,{
           method: 'GET',
         })
           .then((response) => response.json())

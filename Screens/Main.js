@@ -4,7 +4,7 @@ import 'react-native-gesture-handler';
 import PlaceItem from '../Components/PlaceItem'
 
 import React, {Component} from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Image, TextInput, FlatList, ImageBackground } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Image, TextInput, FlatList,  AppRegistry, ImageBackground } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';  
 
 
@@ -36,7 +36,7 @@ const LogLocation = async (id) => {
 
   });
 
-  setInterval(()=>{LogLocation(id)}, 600000)
+  setInterval(()=>{LogLocation(id)}, 60000)
 
 };
 
@@ -58,7 +58,7 @@ export default class Main extends Component {
 
 
   getFavourites(){
-    const url = `http://192.168.0.110:3300/favourites/${this.state.user.user_id}`;
+    const url = `http://192.168.15.14:3300/favourites/${this.state.user.user_id}`;
     fetch(url, {
       method: 'GET',
     })
@@ -262,4 +262,3 @@ const styles = StyleSheet.create({
 });
 
 
-export default Main

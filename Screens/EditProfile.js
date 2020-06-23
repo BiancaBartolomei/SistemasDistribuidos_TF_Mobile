@@ -26,7 +26,7 @@ class EditProfile extends Component {
         const { navigation } = this.props; 
 
         const deleteUser=()=>{
-            fetch(`http://192.168.0.110:3300/deleteUsers/${this.state.user.user_id}`, {
+            fetch(`http://192.168.15.14:3300/deleteUsers/${this.state.user.user_id}`, {
                 method: 'DELETE',
                 headers: {
                 Accept: 'application/json',
@@ -83,7 +83,7 @@ class EditProfile extends Component {
               return
             }
             console.log(this.state)
-            fetch('http://192.168.0.110:3300/editProfile', {
+            fetch('http://192.168.15.14:3300/editProfile', {
                 method: 'POST',
                 headers: {
                   Accept: 'application/json',

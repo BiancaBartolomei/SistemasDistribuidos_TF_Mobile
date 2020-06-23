@@ -59,7 +59,7 @@ class CreateUser2 extends Component {
       
       const createUser = (nome, cpf, telefone, email, senha) => {
           console.log('b')
-        fetch('http://192.168.0.110:3300/createUser', {
+        fetch('http://192.168.15.14:3300/createUser', {
           method: 'POST',
           headers: {
             Accept: 'application/json',
